@@ -2,15 +2,17 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AddRecipeForm from './components/AddRecipeForm';
 import RecipeList from './components/RecipeList';
 import RecipeDetails from './components/RecipeDetails';
-import SearchBar from './components/SearchBar'; // ✅ Import SearchBar
+import SearchBar from './components/SearchBar';
 
 function App() {
   return (
     <Router>
-      <div>
+      <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
         <h1>Recipe Sharing App</h1>
-        {/* ✅ Show SearchBar at the top */}
+
+        {/* Search input to filter recipes */}
         <SearchBar />
+
         <Routes>
           <Route
             path="/"
@@ -27,3 +29,5 @@ function App() {
     </Router>
   );
 }
+
+export default App;
