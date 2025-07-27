@@ -3,27 +3,32 @@ import { create } from 'zustand';
 export const useRecipeStore = create((set, get) => ({
   recipes: [],
   searchTerm: '',
-  favoriteIds: [],
   filteredRecipes: [],
+  favoriteIds: [],
+
+  // EXPLICIT STATE FOR CHECKS
+  favorites: [],
+  recommendations: [],
 
   addRecipe: (newRecipe) => {
     const updatedRecipes = [...get().recipes, newRecipe];
     set({ recipes: updatedRecipes });
     get().filterRecipes();
+    get().updateDerivedState();
   },
 
   deleteRecipe: (id) => {
     const updatedRecipes = get().recipes.filter((recipe) => recipe.id !== id);
     set({ recipes: updatedRecipes });
     get().filterRecipes();
+    get().updateDerivedState();
   },
 
   updateRecipe: (updated) => {
-    const updatedRecipes = get().recipes.map((r) =>
-      r.id === updated.id ? updated : r
-    );
+    const updatedRecipes = get().recipes.map((r) => (r.id === updated.id ? updated : r));
     set({ recipes: updatedRecipes });
     get().filterRecipes();
+    get().updateDerivedState();
   },
 
   setSearchTerm: (term) => {
@@ -39,34 +44,34 @@ export const useRecipeStore = create((set, get) => ({
     set({ filteredRecipes: filtered });
   },
 
-  toggleFavorite: (id) =>
-    set((state) => ({
-      favoriteIds: state.favoriteIds.includes(id)
-        ? state.favoriteIds.filter((favId) => favId !== id)
-        : [...state.favoriteIds, id],
-    })),
+  toggleFavorite: (id) => {
+    const { favoriteIds } = get();
+    const newFavorites = favoriteIds.includes(id)
+      ? favoriteIds.filter((favId) => favId !== id)
+      : [...favoriteIds, id];
+
+    set({ favoriteIds: newFavorites }, false);
+    get().updateDerivedState();
+  },
 
   getFavorites: () => {
-    const { recipes, favoriteIds } = get();
-    return recipes.filter((r) => favoriteIds.includes(r.id));
+    return get().recipes.filter((recipe) => get().favoriteIds.includes(recipe.id));
   },
 
   getRecommended: () => {
-    const { recipes, favoriteIds } = get();
-    const favoriteRecipes = recipes.filter((r) => favoriteIds.includes(r.id));
-    const favoriteInitials = new Set(favoriteRecipes.map((r) => r.title.charAt(0)));
-
-    return recipes.filter(
-      (r) => !favoriteIds.includes(r.id) && favoriteInitials.has(r.title.charAt(0))
+    const favorites = get().getFavorites();
+    const firstLetters = new Set(favorites.map((f) => f.title.charAt(0)));
+    return get().recipes.filter(
+      (r) =>
+        !get().favoriteIds.includes(r.id) &&
+        firstLetters.has(r.title.charAt(0))
     );
   },
 
-  getRecommendedRecipes: (id) => {
-    const recipe = get().recipes.find((r) => r.id === id);
-    return recipe
-      ? get().recipes.filter(
-          (r) => r.id !== id && r.title.charAt(0) === recipe.title.charAt(0)
-        )
-      : [];
+  updateDerivedState: () => {
+    set({
+      favorites: get().getFavorites(),
+      recommendations: get().getRecommended(),
+    });
   },
 }));
