@@ -16,6 +16,18 @@ export const useRecipeStore = create((set, get) => ({
     get().filterRecipes();
     get().updateDerivedState();
   },
+  
+  setRecipes: (newRecipes) => {
+  const filtered = newRecipes.filter((r) =>
+    r.title.toLowerCase().includes(get().searchTerm.toLowerCase())
+  );
+  set({
+    recipes: newRecipes,
+    filteredRecipes: filtered,
+  });
+  get().updateDerivedState();
+},
+
 
   deleteRecipe: (id) => {
     const updatedRecipes = get().recipes.filter((recipe) => recipe.id !== id);

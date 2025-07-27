@@ -1,9 +1,9 @@
 import React from 'react';
 import { useRecipeStore } from './recipeStore';
 import { Link } from 'react-router-dom';
-import RecommendationList from './RecommendationList';
+import RecommendationList from './RecommendationsList';
 
-function FavoritesPage() {
+function FavoritesList() {
   const favoriteRecipes = useRecipeStore((state) => state.getFavorites());
 
   return (
@@ -21,9 +21,9 @@ function FavoritesPage() {
         </ul>
       )}
 
-      <RecommendationList />
+      <RecommendationsList />
     </div>
   );
 }
 
-export default FavoritesPage;
+export default FavoritesList;
