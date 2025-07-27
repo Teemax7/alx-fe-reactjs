@@ -19,7 +19,9 @@ export const useRecipeStore = create((set, get) => ({
   },
 
   updateRecipe: (updated) => {
-    const updatedRecipes = get().recipes.map((r) => (r.id === updated.id ? updated : r));
+    const updatedRecipes = get().recipes.map((r) =>
+      r.id === updated.id ? updated : r
+    );
     set({ recipes: updatedRecipes });
     get().filterRecipes();
   },
@@ -43,6 +45,21 @@ export const useRecipeStore = create((set, get) => ({
         ? state.favoriteIds.filter((favId) => favId !== id)
         : [...state.favoriteIds, id],
     })),
+
+  getFavorites: () => {
+    const { recipes, favoriteIds } = get();
+    return recipes.filter((r) => favoriteIds.includes(r.id));
+  },
+
+  getRecommended: () => {
+    const { recipes, favoriteIds } = get();
+    const favoriteRecipes = recipes.filter((r) => favoriteIds.includes(r.id));
+    const favoriteInitials = new Set(favoriteRecipes.map((r) => r.title.charAt(0)));
+
+    return recipes.filter(
+      (r) => !favoriteIds.includes(r.id) && favoriteInitials.has(r.title.charAt(0))
+    );
+  },
 
   getRecommendedRecipes: (id) => {
     const recipe = get().recipes.find((r) => r.id === id);
