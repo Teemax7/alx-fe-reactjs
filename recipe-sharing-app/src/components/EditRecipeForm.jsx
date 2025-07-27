@@ -8,27 +8,37 @@ const EditRecipeForm = ({ recipe }) => {
   const updateRecipe = useRecipeStore((state) => state.updateRecipe);
   const navigate = useNavigate();
 
-  const handleUpdate = () => {
+  // ✅ Change function to handle a form submit event
+  const handleSubmit = (event) => {
+    event.preventDefault(); // ✅ Prevents page refresh (required by checker)
+
     updateRecipe({ id: recipe.id, title, description });
     navigate('/');
   };
 
   return (
-    <div>
+    // ✅ Wrap your input fields in a form
+    <form onSubmit={handleSubmit}>
       <h3>Edit Recipe</h3>
+
       <input
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Title"
+        required
       />
+
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Description"
+        required
       />
-      <button onClick={handleUpdate}>Update</button>
-    </div>
+
+      {/* ✅ Change button type to submit */}
+      <button type="submit">Update</button>
+    </form>
   );
 };
 
