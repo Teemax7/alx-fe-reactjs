@@ -1,4 +1,3 @@
-// src/components/SearchBar.jsx
 import React from 'react';
 import { useRecipeStore } from './recipeStore';
 
@@ -21,5 +20,3 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
-// This component allows users to search for recipes by title or description.
-// It uses the `setSearchTerm` function from the recipe store to update the search term

@@ -1,32 +1,41 @@
 import { create } from 'zustand';
 
-export const useRecipeStore = create((set) => ({
+export const useRecipeStore = create((set, get) => ({
   recipes: [],
   searchTerm: '',
   favoriteIds: [],
   filteredRecipes: [],
-  
-  addRecipe: (newRecipe) =>
-    set((state) => ({ recipes: [...state.recipes, newRecipe] })),
 
-  deleteRecipe: (id) =>
-    set((state) => ({
-      recipes: state.recipes.filter((recipe) => recipe.id !== id),
-    })),
+  addRecipe: (newRecipe) => {
+    const updatedRecipes = [...get().recipes, newRecipe];
+    set({ recipes: updatedRecipes });
+    get().filterRecipes();
+  },
 
-  updateRecipe: (updated) =>
-    set((state) => ({
-      recipes: state.recipes.map((r) => (r.id === updated.id ? updated : r)),
-    })),
+  deleteRecipe: (id) => {
+    const updatedRecipes = get().recipes.filter((recipe) => recipe.id !== id);
+    set({ recipes: updatedRecipes });
+    get().filterRecipes();
+  },
 
-  setSearchTerm: (term) => set({ searchTerm: term }),
+  updateRecipe: (updated) => {
+    const updatedRecipes = get().recipes.map((r) => (r.id === updated.id ? updated : r));
+    set({ recipes: updatedRecipes });
+    get().filterRecipes();
+  },
 
-  filterRecipes: () =>
-    set((state) => ({
-      filteredRecipes: state.recipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
-      ),
-    })),
+  setSearchTerm: (term) => {
+    set({ searchTerm: term }, false);
+    get().filterRecipes();
+  },
+
+  filterRecipes: () => {
+    const { recipes, searchTerm } = get();
+    const filtered = recipes.filter((recipe) =>
+      recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    set({ filteredRecipes: filtered });
+  },
 
   toggleFavorite: (id) =>
     set((state) => ({
@@ -35,22 +44,12 @@ export const useRecipeStore = create((set) => ({
         : [...state.favoriteIds, id],
     })),
 
-  getFavoriteRecipes: () =>
-    set((state) => ({
-      filteredRecipes: state.recipes.filter((recipe) =>
-        state.favoriteIds.includes(recipe.id)
-      ),
-    })),
-
-  // Optional simple recommendations (same title start)
   getRecommendedRecipes: (id) => {
-    const recipe = set.getState().recipes.find((r) => r.id === id);
+    const recipe = get().recipes.find((r) => r.id === id);
     return recipe
-      ? set
-          .getState()
-          .recipes.filter(
-            (r) => r.id !== id && r.title.startsWith(recipe.title.charAt(0))
-          )
+      ? get().recipes.filter(
+          (r) => r.id !== id && r.title.charAt(0) === recipe.title.charAt(0)
+        )
       : [];
   },
 }));
