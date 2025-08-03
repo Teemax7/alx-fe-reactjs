@@ -1,3 +1,4 @@
+// src/components/Search.jsx
 import React, { useState } from 'react';
 import { fetchAdvancedUsers } from '../services/githubService';
 
@@ -16,8 +17,8 @@ function Search() {
     setUsers([]);
 
     try {
-      const data = await fetchAdvancedUsers(username, location, minRepos);
-      setUsers(data);
+      const results = await fetchAdvancedUsers(username, location, minRepos);
+      setUsers(results);
     } catch (err) {
       setError(true);
     } finally {
@@ -27,12 +28,12 @@ function Search() {
 
   return (
     <div className="max-w-md mx-auto p-4">
-      <form onSubmit={handleSearch} className="mb-4 space-y-2">
+      <form onSubmit={handleSearch} className="space-y-2">
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="GitHub username"
+          placeholder="Enter GitHub username"
           className="border p-2 w-full"
         />
         <input
@@ -54,14 +55,19 @@ function Search() {
         </button>
       </form>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">Looks like we cant find the user</p>}
+      {loading && <p className="mt-4">Loading...</p>}
+      {error && <p className="text-red-500 mt-4">Looks like we can’t find the user</p>}
 
-      {users.length > 0 && users.map((user) => (
-        <div key={user.login} className="border p-4 mb-4">
+      {users.map((user) => (
+        <div key={user.login} className="border p-4 my-2">
           <img src={user.avatar_url} alt={user.login} className="w-16 h-16 rounded-full" />
-          <p className="font-bold">{user.login}</p>
-          <a href={user.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+          <h2 className="text-lg mt-2">{user.login}</h2>
+          <a
+            href={user.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
             GitHub Profile
           </a>
         </div>
