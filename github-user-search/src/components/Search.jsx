@@ -6,6 +6,12 @@ function Search() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [location, setLocation] = useState('');
+  const [minRepos, setMinRepos] = useState('');
+
+  <input placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} />
+<input placeholder="Min Repos" type="number" value={minRepos} onChange={(e) => setMinRepos(e.target.value)} />
+
 
   const handleSearch = async (e) => {
     e.preventDefault();
