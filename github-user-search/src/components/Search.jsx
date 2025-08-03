@@ -39,7 +39,7 @@ function Search() {
       </form>
 
       {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">"Looks like we can't find the user"</p>}
+      {error && <p className="text-red-500">Looks like we cant find the user</p>}
       {user && (
         <div className="border p-4">
           <img src={user.avatar_url} alt={user.login} className="w-20 h-20 rounded-full" />
