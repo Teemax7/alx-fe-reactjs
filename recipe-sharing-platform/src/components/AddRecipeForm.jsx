@@ -3,42 +3,39 @@ import { useState } from "react";
 function AddRecipeForm({ onAddRecipe }) {
   const [title, setTitle] = useState("");
   const [ingredients, setIngredients] = useState("");
-  const [instructions, setInstructions] = useState("");
+  const [steps, setSteps] = useState(""); // renamed from instructions
   const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!title || !ingredients || !instructions) {
+    if (!title || !ingredients || !steps) {
       setError("Please fill in all fields.");
       return;
     }
 
-    // Optional: check that ingredients have at least 2 items
     const ingredientsArray = ingredients.split(",").map((i) => i.trim());
     if (ingredientsArray.length < 2) {
       setError("Please enter at least two ingredients separated by commas.");
       return;
     }
 
-    // Create new recipe object
+    const stepsArray = steps.split("\n").map((s) => s.trim());
+
     const newRecipe = {
       id: Date.now(),
       title,
-      summary: instructions.slice(0, 50) + "...",
+      summary: stepsArray.slice(0, 1).join(" ") + "...",
       image: "https://via.placeholder.com/150",
       ingredients: ingredientsArray,
-      instructions: instructions.split("\n").map((i) => i.trim())
+      steps: stepsArray // now included
     };
 
-    // Pass new recipe back to parent
     onAddRecipe(newRecipe);
 
-    // Reset form
     setTitle("");
     setIngredients("");
-    setInstructions("");
+    setSteps("");
     setError("");
   };
 
@@ -66,10 +63,10 @@ function AddRecipeForm({ onAddRecipe }) {
           ></textarea>
         </div>
         <div>
-          <label className="block font-semibold mb-1">Instructions (one step per line)</label>
+          <label className="block font-semibold mb-1">Steps (one step per line)</label>
           <textarea
-            value={instructions}
-            onChange={(e) => setInstructions(e.target.value)}
+            value={steps}
+            onChange={(e) => setSteps(e.target.value)}
             className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={4}
           ></textarea>
