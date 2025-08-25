@@ -36,12 +36,16 @@ function RecipeDetail() {
            ))}
           </ul>
           {/* Placeholder Instructions */}     
-          <h2 className="text-2xl font-semibold mb-2">Steps</h2>
+          <h2 className="text-2xl font-semibold mb-2">Instructions</h2>
           <ol className="list-decimal list-inside">
-            {recipe.steps.map((step, index) => (
+            {recipe.instructions
+            ? recipe.instructions.map((step, index) => (
+            <li key={index}>{step}</li>
+            ))
+            : recipe.steps.map((step, index) => (   // fallback if instructions missing
             <li key={index}>{step}</li>
             ))}
-          </ol>
+           </ol>
         </div>
       </div>
     </div>
