@@ -31,17 +31,16 @@ function RecipeDetail() {
           {/* Placeholder Ingredients */}
           <h2 className="text-2xl font-semibold mb-2">Ingredients</h2>
           <ul className="list-disc list-inside mb-6">
-            <li>Ingredient 1</li>
-            <li>Ingredient 2</li>
-            <li>Ingredient 3</li>
+            {recipe.ingredients.map((item, index) => (
+            <li key={index}>{item}</li>
+           ))}
           </ul>
-
-          {/* Placeholder Instructions */}
+          {/* Placeholder Instructions */}     
           <h2 className="text-2xl font-semibold mb-2">Instructions</h2>
           <ol className="list-decimal list-inside">
-            <li>Step 1: Do something</li>
-            <li>Step 2: Do something else</li>
-            <li>Step 3: Finish up</li>
+            {recipe.instructions.map((step, index) => (
+            <li key={index}>{step}</li>
+            ))}
           </ol>
         </div>
       </div>
@@ -50,3 +49,6 @@ function RecipeDetail() {
 }
 
 export default RecipeDetail;
+
+
+
