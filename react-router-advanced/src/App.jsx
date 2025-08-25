@@ -1,15 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/Home.jsx";
 import Profile from "./components/Profile.jsx";
-import ProfileDetails from "./components/ProfileDetails.jsx";
-import ProfileSettings from "./components/ProfileSettings.jsx";
-import Post from "./components/Post.jsx";
 import Login from "./components/Login.jsx";
+import BlogPost from "./components/BlogPost.jsx";
 
-// Simulated authentication status
-const isAuthenticated = false; // toggle to true for testing
+// Simulated authentication
+const isAuthenticated = false;
 
-// Protected route wrapper
 const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
@@ -19,8 +16,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-
-        {/* Protected route for Profile */}
+        
         <Route
           path="/profile/*"
           element={
@@ -28,14 +24,10 @@ function App() {
               <Profile />
             </ProtectedRoute>
           }
-        >
-          {/* Nested routes */}
-          <Route path="details" element={<ProfileDetails />} />
-          <Route path="settings" element={<ProfileSettings />} />
-        </Route>
+        />
 
-        {/* Dynamic route example */}
-        <Route path="/post/:postId" element={<Post />} />
+        {/* Dynamic route for BlogPost */}
+        <Route path="/blog/:id" element={<BlogPost />} />
 
         <Route path="/login" element={<Login />} />
       </Routes>
