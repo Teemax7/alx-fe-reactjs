@@ -1,7 +1,7 @@
 import React from "react"; // Required for Jest
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom"; // For matchers like toBeInTheDocument
-import TodoList from "../components/TodoList.jsx";
+import TodoList from "./TodoList.jsx";
 
 describe("TodoList Component", () => {
   test("renders initial todos", () => {
